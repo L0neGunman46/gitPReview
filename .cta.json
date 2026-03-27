@@ -1,0 +1,21 @@
+{
+  "projectName": "test3",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "bun",
+  "includeExamples": false,
+  "tailwind": true,
+  "addOnOptions": {},
+  "envVarValues": {
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_bGl0ZXJhdGUtdG9tY2F0LTE4LmNsZXJrLmFjY291bnRzLmRldiQ"
+  },
+  "git": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "eslint",
+    "shadcn",
+    "clerk"
+  ]
+}
