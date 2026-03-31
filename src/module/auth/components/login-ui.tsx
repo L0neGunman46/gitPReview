@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { signIn } from '#/lib/auth-client'
 import { Button } from '#/components/ui/button'
 import {
@@ -12,12 +12,12 @@ import {
 const LoginUI = () => {
   const [isLoading, setIsLoading] = useState(false)
 
-
   const handleGitHubLogin = async () => {
     setIsLoading(true)
     try {
       await signIn.social({
         provider: 'github',
+        callbackURL: '/dashboard',
       })
     } catch (err) {
       console.error('Login Error: ', err)

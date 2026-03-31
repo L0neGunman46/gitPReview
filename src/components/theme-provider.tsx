@@ -1,5 +1,5 @@
 import { useRouter } from '@tanstack/react-router'
-import { createContext, type PropsWithChildren, use } from 'react'
+import { createContext, type PropsWithChildren, use, useEffect } from 'react'
 import { setThemeServerFn, type T as Theme } from '#/lib/theme'
 
 type ThemeContextVal = { theme: Theme; setTheme: (val: Theme) => void }
@@ -9,6 +9,24 @@ const ThemeContext = createContext<ThemeContextVal | null>(null)
 
 export const ThemeProvider = ({ children, theme }: Props) => {
   const router = useRouter()
+  useEffect(() => {
+    const root = document.documentElement
+    const applyTheme = (resolvedTheme: 'light' | 'dark') => {
+      root.classList.remove('light', 'dark')
+      root.classList.add(resolvedTheme)
+    }
+
+    if (theme === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+      applyTheme(mq.matches ? 'dark' : 'light')
+      const handler = (e: MediaQueryListEvent) =>
+        applyTheme(e.matches ? 'dark' : 'light')
+      mq.addEventListener('change', handler)
+      return () => mq.removeEventListener('change', handler)
+    } else {
+      applyTheme(theme)
+    }
+  }, [theme])
   function setTheme(val: Theme) {
     setThemeServerFn({ data: val }).then(() => router.invalidate())
   }
