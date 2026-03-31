@@ -13,3 +13,4 @@ __unconfig*
 todos.json
 
 /generated/prisma
+src/routeTrees.gen.ts
