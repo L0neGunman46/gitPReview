@@ -173,7 +173,7 @@ export function AppSideBar({ session }: AppSidebarProps) {
                 sideOffset={8}
               >
                 <div className="px-2 py-3">
-                  <DropdownMenuItem asChild className='border-b'>
+                  <DropdownMenuItem asChild className="border-b">
                     <button
                       onClick={() =>
                         setTheme(theme === 'dark' ? 'light' : 'dark')

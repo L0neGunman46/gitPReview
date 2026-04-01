@@ -2,7 +2,6 @@ import { fetchUserContribution, getGithubToken } from '#/lib/github/lib/github'
 import { auth } from '#/lib/auth'
 import { Octokit } from 'octokit'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import prisma from '#/db'
 import { createServerFn } from '@tanstack/react-start'
 
 // Steps
@@ -56,7 +55,6 @@ export const getDashboardStats = createServerFn().handler(async () => {
   // Todo: fetch the total connected repos from db
   const totalRepos = 30
 
-  //   ftch the contribution , commit and pr
   const calendar = await fetchUserContribution(token, user.login).catch(
     () => null,
   )
@@ -152,7 +150,7 @@ export const getMonthlyActivity = createServerFn().handler(async () => {
 
   const prResult = await octokit.rest.search
     .issuesAndPullRequests({
-      q: `author:${user.login} type:pr created:>${sixMonthsAgo.toISOString().split('t')[0]}`,
+      q: `author:${user.login} type:pr created:>${sixMonthsAgo.toISOString().split('T')[0]}`,
       per_page: 100,
     })
     .catch(() => null)
@@ -170,4 +168,31 @@ export const getMonthlyActivity = createServerFn().handler(async () => {
     name,
     ...monthlydata[name],
   }))
+})
+
+export const getContributionStats = createServerFn().handler(async () => {
+  const headers = getRequestHeaders()
+  const session = await auth.api.getSession({ headers })
+
+  if (!session?.user) {
+    throw new Error('Unauthorised')
+  }
+
+  const token = await getGithubToken()
+  const octokit = new Octokit({ auth: token })
+  const { data: user } = await octokit.rest.users.getAuthenticated()
+
+  const calendar = await fetchUserContribution(token, user.login)
+  if (!calendar) {
+    return {}
+  }
+
+  const contributions = calendar.weeks.flatMap((week: any) =>
+    week.contributionDays.map((day: any) => ({
+      date: day.date,
+      count: day.contributionCount,
+      level: Math.min(4, Math.floor(day.contributionCount / 3)),
+    })),
+  )
+  return { contributions, totalContributions: calendar.totalContributions }
 })

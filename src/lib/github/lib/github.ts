@@ -1,6 +1,5 @@
 import { Octokit } from 'octokit'
 import { auth } from '#/lib/auth'
-import { createServerFn } from '@tanstack/react-start'
 import prisma from '#/db'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 
@@ -52,7 +51,7 @@ export async function fetchUserContribution(token: string, userName: string) {
   const query = `
     query($username:String!){
         user(login:$username){
-            contributionCollection {
+            contributionsCollection {
                 contributionCalendar{
                     totalContributions
                     weeks {
@@ -71,7 +70,7 @@ export async function fetchUserContribution(token: string, userName: string) {
     const resp: any = await octokit.graphql(query, {
       username: userName,
     })
-    return resp.user.contributionCollection.contributionCalendar
+    return resp.user.contributionsCollection.contributionCalendar
   } catch (err) {
     console.log('Error loading repo', err)
   }
