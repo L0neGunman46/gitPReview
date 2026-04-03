@@ -75,3 +75,47 @@ export async function fetchUserContribution(token: string, userName: string) {
     console.log('Error loading repo', err)
   }
 }
+
+export const getRepositories = async (
+  page: number = 1,
+  perPage: number = 10,
+) => {
+  const token = await getGithubToken()
+  const octokit = new Octokit({ auth: token })
+
+  const { data } = await octokit.rest.repos.listForAuthenticatedUser({
+    sort: 'updated',
+    direction: 'desc',
+    visibility: 'all',
+    per_page: perPage,
+    page: page,
+  })
+  return data
+}
+
+export const createWebHook = async (owner: string, repo: string) => {
+  const token = await getGithubToken()
+  const octokit = new Octokit({ auth: token })
+
+  // registering this url to github webhoks and it gets sent a post request on this url
+  const webhookUrl = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/webhooks/github`
+
+  const { data: hooks } = await octokit.rest.repos.listWebhooks({ owner, repo })
+
+  const existingHook = hooks.find((hook) => hook.config.url === webhookUrl)
+  if (existingHook) {
+    return existingHook
+  }
+
+  const { data } = await octokit.rest.repos.createWebhook({
+    owner,
+    repo,
+    config: {
+      url: webhookUrl,
+      content_type: 'json',
+    },
+    events: ['pull_request'],
+  })
+
+  return data
+}

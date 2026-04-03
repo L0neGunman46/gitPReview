@@ -15,6 +15,8 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ProtectedDashboardRepositoryIndexRouteImport } from './routes/_protected/dashboard/repository/index'
+import { Route as ApiWebhooksGithubSplatRouteImport } from './routes/api/webhooks/github/$'
 
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
@@ -45,6 +47,17 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedDashboardRepositoryIndexRoute =
+  ProtectedDashboardRepositoryIndexRouteImport.update({
+    id: '/repository/',
+    path: '/repository/',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
+const ApiWebhooksGithubSplatRoute = ApiWebhooksGithubSplatRouteImport.update({
+  id: '/api/webhooks/github/$',
+  path: '/api/webhooks/github/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
@@ -52,12 +65,16 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
+  '/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
+  '/dashboard/repository': typeof ProtectedDashboardRepositoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,12 +84,27 @@ export interface FileRoutesById {
   '/_protected/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
+  '/_protected/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/auth/login' | '/api/auth/$' | '/dashboard/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/auth/login'
+    | '/api/auth/$'
+    | '/dashboard/'
+    | '/api/webhooks/github/$'
+    | '/dashboard/repository/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth/login' | '/' | '/api/auth/$' | '/dashboard'
+  to:
+    | '/auth/login'
+    | '/'
+    | '/api/auth/$'
+    | '/dashboard'
+    | '/api/webhooks/github/$'
+    | '/dashboard/repository'
   id:
     | '__root__'
     | '/_protected'
@@ -81,12 +113,15 @@ export interface FileRouteTypes {
     | '/_protected/'
     | '/api/auth/$'
     | '/_protected/dashboard/'
+    | '/api/webhooks/github/$'
+    | '/_protected/dashboard/repository/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiWebhooksGithubSplatRoute: typeof ApiWebhooksGithubSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,15 +168,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/dashboard/repository/': {
+      id: '/_protected/dashboard/repository/'
+      path: '/repository'
+      fullPath: '/dashboard/repository/'
+      preLoaderRoute: typeof ProtectedDashboardRepositoryIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRoute
+    }
+    '/api/webhooks/github/$': {
+      id: '/api/webhooks/github/$'
+      path: '/api/webhooks/github/$'
+      fullPath: '/api/webhooks/github/$'
+      preLoaderRoute: typeof ApiWebhooksGithubSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface ProtectedDashboardRouteChildren {
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardRepositoryIndexRoute: typeof ProtectedDashboardRepositoryIndexRoute
 }
 
 const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+  ProtectedDashboardRepositoryIndexRoute:
+    ProtectedDashboardRepositoryIndexRoute,
 }
 
 const ProtectedDashboardRouteWithChildren =
@@ -165,6 +217,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiWebhooksGithubSplatRoute: ApiWebhooksGithubSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
