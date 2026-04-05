@@ -1,10 +1,10 @@
 import { auth } from '../auth'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { createWebHook, getRepositories } from '../github/lib/github'
+import { createWebHook, getRepositories } from '../github/github'
 import prisma from '#/db'
 import { createServerFn } from '@tanstack/react-start'
 
-export const fetchRepositories = createServerFn()
+export const fetchRepositories = createServerFn({ method: 'POST' })
   .inputValidator((data: { page: number; perPage: number }) => data)
   .handler(async ({ data: { page, perPage } }) => {
     const headers = getRequestHeaders()
@@ -31,41 +31,57 @@ export const fetchRepositories = createServerFn()
     }))
   })
 
-export const connectRepository = createServerFn()
+export const connectRepository = createServerFn({ method: 'POST' })
   .inputValidator(
-    (data: { owner: string; repo: string; githubId: number }) => data,
+    (data: {
+      owner: string
+      repo: string
+      githubId: number
+      description: string
+      stars: number
+      language: string
+    }) => data,
   )
-  .handler(async ({ data: { owner, repo, githubId } }) => {
-    const headers = getRequestHeaders()
+  .handler(
+    async ({
+      data: { owner, repo, githubId, description, stars, language },
+    }) => {
+      try {
+        const headers = getRequestHeaders()
 
-    const session = await auth.api.getSession({
-      headers,
-    })
+        const session = await auth.api.getSession({
+          headers,
+        })
 
-    if (!session) {
-      throw new Error('UnAuthorised')
-    }
+        if (!session) {
+          throw new Error('UnAuthorised')
+        }
 
-    //   TOdo check if user can connect to more repositories
-    const webhook = await createWebHook(owner, repo)
-    if (webhook) {
-      await prisma.repository.create({
-        data: {
-          githubId: BigInt(githubId),
-          name: repo,
-          owner,
-          fullName: `${owner}/${repo}`,
-          url: `https://github.com/${owner}/${repo}`,
-          userId: session.user.id,
-        },
-      })
-    }
+        //   TOdo check if user can connect to more repositories
+        const webhook = await createWebHook(owner, repo)
+        if (webhook) {
+          await prisma.repository.create({
+            data: {
+              githubId: BigInt(githubId),
+              name: repo,
+              owner,
+              fullName: `${owner}/${repo}`,
+              url: `https://github.com/${owner}/${repo}`,
+              userId: session.user.id,
+              description: description,
+              stars: stars,
+              language: language,
+            },
+          })
+        }
 
-    //   TOdo increent count for tracking usage
-    // Todo trigger repository indexing for RAG (fire and forget)
+        //   TOdo increent count for tracking usage
+        // Todo trigger repository indexing for RAG (fire and forget)
 
-    return webhook
-  })
-
-
-  
+        return webhook
+      } catch (err) {
+        console.error('Error in creating webhook', err)
+        return {}
+      }
+    },
+  )

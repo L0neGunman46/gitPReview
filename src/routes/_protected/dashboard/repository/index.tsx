@@ -17,6 +17,7 @@ import { useConnectRepository } from '#/components/repository/use-connect-reposi
 
 export const Route = createFileRoute('/_protected/dashboard/repository/')({
   component: RepositoryComponent,
+  staleTime: 2 * 60 * 1000,
 })
 
 interface Repository {
@@ -101,6 +102,9 @@ function RepositoryComponent() {
         owner: repo.full_name.split('/')[0],
         repo: repo.name,
         githubId: repo?.id,
+        stars: repo?.stargazers_count,
+        description: repo?.description || '',
+        language: repo?.language || '',
       },
       { onSettled: () => setLocalConnectingId(null) },
     )

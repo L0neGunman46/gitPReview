@@ -9,12 +9,23 @@ export const useConnectRepository = () => {
       owner,
       repo,
       githubId,
+      description = '',
+      language,
+      stars,
     }: {
       owner: string
       repo: string
       githubId: number
+      description: string
+      language: string
+      stars: number
     }) => {
-      return await connectRepository({ data: { owner, repo, githubId } })
+      console.log('Stars', stars)
+      console.log('Language', language)
+      console.log('description', description)
+      return await connectRepository({
+        data: { owner, repo, githubId, description, language, stars },
+      })
     },
     onSuccess: () => {
       toast.success('Repository connected successfully')

@@ -15,6 +15,7 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
 import { Route as ProtectedDashboardRepositoryIndexRouteImport } from './routes/_protected/dashboard/repository/index'
 import { Route as ApiWebhooksGithubSplatRouteImport } from './routes/api/webhooks/github/$'
 
@@ -47,6 +48,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedDashboardSettingsIndexRoute =
+  ProtectedDashboardSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
 const ProtectedDashboardRepositoryIndexRoute =
   ProtectedDashboardRepositoryIndexRouteImport.update({
     id: '/repository/',
@@ -67,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
+  '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
@@ -75,6 +83,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/dashboard/repository': typeof ProtectedDashboardRepositoryIndexRoute
+  '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +95,7 @@ export interface FileRoutesById {
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/_protected/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
+  '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/api/webhooks/github/$'
     | '/dashboard/repository/'
+    | '/dashboard/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/login'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/webhooks/github/$'
     | '/dashboard/repository'
+    | '/dashboard/settings'
   id:
     | '__root__'
     | '/_protected'
@@ -115,6 +127,7 @@ export interface FileRouteTypes {
     | '/_protected/dashboard/'
     | '/api/webhooks/github/$'
     | '/_protected/dashboard/repository/'
+    | '/_protected/dashboard/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/dashboard/settings/': {
+      id: '/_protected/dashboard/settings/'
+      path: '/settings'
+      fullPath: '/dashboard/settings/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRoute
+    }
     '/_protected/dashboard/repository/': {
       id: '/_protected/dashboard/repository/'
       path: '/repository'
@@ -188,12 +208,14 @@ declare module '@tanstack/react-router' {
 interface ProtectedDashboardRouteChildren {
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedDashboardRepositoryIndexRoute: typeof ProtectedDashboardRepositoryIndexRoute
+  ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
 }
 
 const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   ProtectedDashboardRepositoryIndexRoute:
     ProtectedDashboardRepositoryIndexRoute,
+  ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
 }
 
 const ProtectedDashboardRouteWithChildren =
