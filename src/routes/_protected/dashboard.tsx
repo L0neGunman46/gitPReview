@@ -13,6 +13,7 @@ export const Route = createFileRoute('/_protected/dashboard')({
     const session = await getSession()
     return { session }
   },
+  staleTime: 2 * 60 * 1000,
   component: RouteComponent,
 })
 

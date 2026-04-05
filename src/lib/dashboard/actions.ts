@@ -1,4 +1,4 @@
-import { fetchUserContribution, getGithubToken } from '#/lib/github/lib/github'
+import { fetchUserContribution, getGithubToken } from '#/lib/github/github'
 import { auth } from '#/lib/auth'
 import { Octokit } from 'octokit'
 import { getRequestHeaders } from '@tanstack/react-start/server'

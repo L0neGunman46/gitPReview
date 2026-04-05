@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import appCss from '../styles.css?url'
 import { getThemeServerFn } from '#/lib/theme'
 import { ThemeProvider } from '#/components/theme-provider'
+import { Toaster } from '#/components/ui/sonner'
 
 const queryClient = new QueryClient()
 
@@ -47,6 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          <Toaster />
           <TanStackDevtools
             config={{
               position: 'bottom-right',
