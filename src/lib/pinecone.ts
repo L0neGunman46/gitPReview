@@ -5,5 +5,5 @@ export const pinecone = new Pinecone({
 })
 
 export const pineconeIndex = pinecone.index({
-  name: 'gitpreview-vector-embeddings-v1',
+  name: 'gitpreview-v1',
 })
