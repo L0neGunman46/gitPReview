@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -31,6 +32,11 @@ const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInngestRoute = ApiInngestRouteImport.update({
+  id: '/api/inngest',
+  path: '/api/inngest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
@@ -69,6 +75,7 @@ const ApiWebhooksGithubSplatRoute = ApiWebhooksGithubSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
   '/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRouteWithChildren
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
   '/_protected/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/api/inngest'
     | '/auth/login'
     | '/api/auth/$'
     | '/dashboard/'
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/api/inngest'
     | '/auth/login'
     | '/'
     | '/api/auth/$'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_protected'
     | '/_protected/dashboard'
+    | '/api/inngest'
     | '/auth/login'
     | '/_protected/'
     | '/api/auth/$'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
+  ApiInngestRoute: typeof ApiInngestRoute
   AuthLoginRoute: typeof AuthLoginRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiWebhooksGithubSplatRoute: typeof ApiWebhooksGithubSplatRoute
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/inngest': {
+      id: '/api/inngest'
+      path: '/api/inngest'
+      fullPath: '/api/inngest'
+      preLoaderRoute: typeof ApiInngestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/dashboard': {
@@ -237,6 +257,7 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
+  ApiInngestRoute: ApiInngestRoute,
   AuthLoginRoute: AuthLoginRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiWebhooksGithubSplatRoute: ApiWebhooksGithubSplatRoute,
