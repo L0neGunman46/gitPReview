@@ -2,10 +2,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { serve } from 'inngest/edge'
 import { inngest } from '../../inngest/client'
 import { IndexRepo } from '#/inngest/functions/indexRepo'
+import { generateReview } from '#/inngest/functions/review'
 
 const handler = serve({
   client: inngest,
-  functions: [IndexRepo],
+  functions: [IndexRepo, generateReview],
 })
 
 export const Route = createFileRoute('/api/inngest')({

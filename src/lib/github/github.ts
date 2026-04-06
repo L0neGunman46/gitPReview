@@ -199,3 +199,48 @@ export async function getRepoFileContents(
   }
   return files
 }
+
+export async function getPullRequestDiff(
+  token: string,
+  owner: string,
+  repoName: string,
+  prNum: number,
+) {
+  const octokit = new Octokit({ auth: token })
+  const { data: pr } = await octokit.rest.pulls.get({
+    owner,
+    repo: repoName,
+    pull_number: prNum,
+  })
+
+  const { data: diff } = await octokit.rest.pulls.get({
+    owner,
+    repo: repoName,
+    pull_number: prNum,
+    mediaType: {
+      format: 'diff',
+    },
+  })
+  return {
+    title: pr.title,
+    diff: diff as unknown as string,
+    description: pr.body || '',
+  }
+}
+
+export async function postReviewComment(
+  token: string,
+  owner: string,
+  prNumber: number,
+  repo: string,
+  review: string,
+) {
+  const octokit = new Octokit({ auth: token })
+
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: prNumber,
+    body: `## 🤖 AI Code Review\n\n${review}\n\n--\nPowered by GitPreview`,
+  })
+}
