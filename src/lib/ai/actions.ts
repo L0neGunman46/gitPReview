@@ -2,6 +2,7 @@ import prisma from '#/db'
 import { createServerFn } from '@tanstack/react-start'
 import { getPullRequestDiff } from '../github/github'
 import { inngest } from '#/inngest/client'
+import { canCreateReview, incrementReviewCount } from '../payment/subscription'
 
 export const reviewPullRequest = createServerFn()
   .inputValidator(
@@ -32,6 +33,15 @@ export const reviewPullRequest = createServerFn()
         )
       }
 
+      const canReview = await canCreateReview({
+        data: { userId: repository.user.id, repositoryId: repository.id },
+      })
+      if (!canReview) {
+        throw new Error(
+          'Review Limit reached for this repository. Please upgrade to pro plan for unlimited reviews',
+        )
+      }
+
       const githubAccount = repository.user.accounts[0]
       if (!githubAccount?.accessToken) {
         throw new Error('No GitHub access token found for the repository owner')
@@ -51,6 +61,10 @@ export const reviewPullRequest = createServerFn()
           prNumber: prNum,
           userId: repository.user.id,
         },
+      })
+
+      await incrementReviewCount({
+        data: { repositoryId: repository.id, userId: repository.id },
       })
 
       return { success: true, message: 'Review Queued' }

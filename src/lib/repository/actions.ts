@@ -4,6 +4,11 @@ import { createWebHook, getRepositories } from '../github/github'
 import prisma from '#/db'
 import { createServerFn } from '@tanstack/react-start'
 import { inngest } from '#/inngest/client'
+import {
+  canConnectRepository,
+  decrementReositoryCount,
+  incrementRepositoryCount,
+} from '../payment/subscription'
 
 export const fetchRepositories = createServerFn({ method: 'POST' })
   .inputValidator((data: { page: number; perPage: number }) => data)
@@ -58,6 +63,17 @@ export const connectRepository = createServerFn({ method: 'POST' })
       }
 
       //   TOdo check if user can connect to more repositories
+
+      const canConnect = await canConnectRepository({
+        data: { userId: session.user.id },
+      })
+
+      if (!canConnect) {
+        throw new Error(
+          'Repository limit reached. Please upgrade to pro for unlimited repositories.',
+        )
+      }
+
       const webhook = await createWebHook(owner, repo)
       if (webhook) {
         await prisma.repository.create({
@@ -73,26 +89,30 @@ export const connectRepository = createServerFn({ method: 'POST' })
             language: language,
           },
         })
-      }
 
-      //   TOdo increment count for tracking usage
+        //   TOdo increment count for tracking usage
 
-      // Todo trigger repository indexing for RAG (fire and forget)
-
-      try {
-        // event based background jobs
-        await inngest.send({
-          name: 'repository.connected',
-          data: {
-            owner,
-            repo,
-            userId: session.user.id,
-          },
+        await incrementRepositoryCount({
+          data: { userId: session.user.id },
         })
-      } catch (err) {
-        console.error('Failed to trigger repository indexing', err)
-      }
 
-      return webhook
+        // Todo trigger repository indexing for RAG (fire and forget)
+
+        try {
+          // event based background jobs
+          await inngest.send({
+            name: 'repository.connected',
+            data: {
+              owner,
+              repo,
+              userId: session.user.id,
+            },
+          })
+        } catch (err) {
+          console.error('Failed to trigger repository indexing', err)
+        }
+
+        return webhook
+      }
     },
   )
