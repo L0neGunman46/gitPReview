@@ -1,3 +1,4 @@
+import { reviewPullRequest } from '#/lib/ai/actions'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/api/webhooks/github/$')({
@@ -13,6 +14,24 @@ export const Route = createFileRoute('/api/webhooks/github/$')({
               status: 200,
               headers: { 'Content-Type': 'application/json' },
             })
+          }
+          if (event === 'pull_request') {
+            const action = body.action
+            const repo = body.repository.full_name
+            const prNum = body.number
+
+            const [owner, repoName] = repo.split('/')
+
+            // if pr is open or we are synching pr
+            if (action === 'opened' || action === 'synchronize') {
+              reviewPullRequest({ data: { owner, repoName, prNum } })
+                .then(() =>
+                  console.log(`Review completed for ${repo} #${prNum}`),
+                )
+                .catch((err) =>
+                  console.error(`Review failed for ${repo} #${prNum}`, err),
+                )
+            }
           }
 
           return new Response(JSON.stringify({ message: 'Event Processed' }), {
