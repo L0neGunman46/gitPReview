@@ -17,6 +17,7 @@ import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dash
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
+import { Route as ProtectedDashboardReviewsIndexRouteImport } from './routes/_protected/dashboard/reviews/index'
 import { Route as ProtectedDashboardRepositoryIndexRouteImport } from './routes/_protected/dashboard/repository/index'
 import { Route as ApiWebhooksGithubSplatRouteImport } from './routes/api/webhooks/github/$'
 
@@ -60,6 +61,12 @@ const ProtectedDashboardSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => ProtectedDashboardRoute,
   } as any)
+const ProtectedDashboardReviewsIndexRoute =
+  ProtectedDashboardReviewsIndexRouteImport.update({
+    id: '/reviews/',
+    path: '/reviews/',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
 const ProtectedDashboardRepositoryIndexRoute =
   ProtectedDashboardRepositoryIndexRouteImport.update({
     id: '/repository/',
@@ -81,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
+  '/dashboard/reviews/': typeof ProtectedDashboardReviewsIndexRoute
   '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/dashboard/repository': typeof ProtectedDashboardRepositoryIndexRoute
+  '/dashboard/reviews': typeof ProtectedDashboardReviewsIndexRoute
   '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
   '/_protected/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
+  '/_protected/dashboard/reviews/': typeof ProtectedDashboardReviewsIndexRoute
   '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/api/webhooks/github/$'
     | '/dashboard/repository/'
+    | '/dashboard/reviews/'
     | '/dashboard/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/webhooks/github/$'
     | '/dashboard/repository'
+    | '/dashboard/reviews'
     | '/dashboard/settings'
   id:
     | '__root__'
@@ -139,6 +151,7 @@ export interface FileRouteTypes {
     | '/_protected/dashboard/'
     | '/api/webhooks/github/$'
     | '/_protected/dashboard/repository/'
+    | '/_protected/dashboard/reviews/'
     | '/_protected/dashboard/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardSettingsIndexRouteImport
       parentRoute: typeof ProtectedDashboardRoute
     }
+    '/_protected/dashboard/reviews/': {
+      id: '/_protected/dashboard/reviews/'
+      path: '/reviews'
+      fullPath: '/dashboard/reviews/'
+      preLoaderRoute: typeof ProtectedDashboardReviewsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRoute
+    }
     '/_protected/dashboard/repository/': {
       id: '/_protected/dashboard/repository/'
       path: '/repository'
@@ -228,6 +248,7 @@ declare module '@tanstack/react-router' {
 interface ProtectedDashboardRouteChildren {
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedDashboardRepositoryIndexRoute: typeof ProtectedDashboardRepositoryIndexRoute
+  ProtectedDashboardReviewsIndexRoute: typeof ProtectedDashboardReviewsIndexRoute
   ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
 }
 
@@ -235,6 +256,7 @@ const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   ProtectedDashboardRepositoryIndexRoute:
     ProtectedDashboardRepositoryIndexRoute,
+  ProtectedDashboardReviewsIndexRoute: ProtectedDashboardReviewsIndexRoute,
   ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
 }
 
