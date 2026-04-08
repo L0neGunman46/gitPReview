@@ -1,4 +1,13 @@
-import { BookOpen, Settings, Moon, Sun, LogOut } from 'lucide-react'
+import {
+  Settings,
+  Moon,
+  Sun,
+  LogOut,
+  UserStar,
+  LayoutDashboard,
+  BadgeDollarSign,
+  Wrench,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -32,7 +41,7 @@ const navigationItems = [
   {
     title: 'Dashboard',
     url: '/dashboard',
-    icon: BookOpen,
+    icon: LayoutDashboard,
   },
   {
     title: 'Repository',
@@ -42,17 +51,17 @@ const navigationItems = [
   {
     title: 'Reviews',
     url: '/dashboard/reviews',
-    icon: BookOpen,
+    icon: UserStar,
   },
   {
     title: 'Subscriptions',
     url: '/dashboard/subscriptions',
-    icon: BookOpen,
+    icon: BadgeDollarSign,
   },
   {
     title: 'Settings',
     url: '/dashboard/settings',
-    icon: BookOpen,
+    icon: Wrench,
   },
 ]
 

@@ -18,19 +18,21 @@ model Test {
 }
 
 model User {
-  id            String       @id
-  name          String
-  email         String
-  emailVerified Boolean      @default(false)
-  image         String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  repositories  Repository[]
-  userUsage     UserUsage?
-  subscriptionTier String @default("FREE")
-  subscriptionStatus String? //Active or cancelled or expired 
+  id                  String       @id
+  name                String
+  email               String
+  emailVerified       Boolean      @default(false)
+  image               String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  sessions            Session[]
+  accounts            Account[]
+  repositories        Repository[]
+  userUsage           UserUsage?
+  subscriptionTier    String       @default("FREE")
+  subscriptionStatus  String? //Active or cancelled or expired
+  polarCustomerId     String?      @unique
+  polarSubscriptionId String?      @unique
 
   @@unique([email])
   @@map("user")

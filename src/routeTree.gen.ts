@@ -16,6 +16,7 @@ import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ProtectedDashboardSubscriptionsIndexRouteImport } from './routes/_protected/dashboard/subscriptions/index'
 import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
 import { Route as ProtectedDashboardReviewsIndexRouteImport } from './routes/_protected/dashboard/reviews/index'
 import { Route as ProtectedDashboardRepositoryIndexRouteImport } from './routes/_protected/dashboard/repository/index'
@@ -55,6 +56,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedDashboardSubscriptionsIndexRoute =
+  ProtectedDashboardSubscriptionsIndexRouteImport.update({
+    id: '/subscriptions/',
+    path: '/subscriptions/',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
 const ProtectedDashboardSettingsIndexRoute =
   ProtectedDashboardSettingsIndexRouteImport.update({
     id: '/settings/',
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
   '/dashboard/reviews/': typeof ProtectedDashboardReviewsIndexRoute
   '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
+  '/dashboard/subscriptions/': typeof ProtectedDashboardSubscriptionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRoute
@@ -101,6 +109,7 @@ export interface FileRoutesByTo {
   '/dashboard/repository': typeof ProtectedDashboardRepositoryIndexRoute
   '/dashboard/reviews': typeof ProtectedDashboardReviewsIndexRoute
   '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
+  '/dashboard/subscriptions': typeof ProtectedDashboardSubscriptionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -115,6 +124,7 @@ export interface FileRoutesById {
   '/_protected/dashboard/repository/': typeof ProtectedDashboardRepositoryIndexRoute
   '/_protected/dashboard/reviews/': typeof ProtectedDashboardReviewsIndexRoute
   '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
+  '/_protected/dashboard/subscriptions/': typeof ProtectedDashboardSubscriptionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/dashboard/repository/'
     | '/dashboard/reviews/'
     | '/dashboard/settings/'
+    | '/dashboard/subscriptions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/inngest'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/dashboard/repository'
     | '/dashboard/reviews'
     | '/dashboard/settings'
+    | '/dashboard/subscriptions'
   id:
     | '__root__'
     | '/_protected'
@@ -153,6 +165,7 @@ export interface FileRouteTypes {
     | '/_protected/dashboard/repository/'
     | '/_protected/dashboard/reviews/'
     | '/_protected/dashboard/settings/'
+    | '/_protected/dashboard/subscriptions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/dashboard/subscriptions/': {
+      id: '/_protected/dashboard/subscriptions/'
+      path: '/subscriptions'
+      fullPath: '/dashboard/subscriptions/'
+      preLoaderRoute: typeof ProtectedDashboardSubscriptionsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRoute
+    }
     '/_protected/dashboard/settings/': {
       id: '/_protected/dashboard/settings/'
       path: '/settings'
@@ -250,6 +270,7 @@ interface ProtectedDashboardRouteChildren {
   ProtectedDashboardRepositoryIndexRoute: typeof ProtectedDashboardRepositoryIndexRoute
   ProtectedDashboardReviewsIndexRoute: typeof ProtectedDashboardReviewsIndexRoute
   ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
+  ProtectedDashboardSubscriptionsIndexRoute: typeof ProtectedDashboardSubscriptionsIndexRoute
 }
 
 const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
@@ -258,6 +279,8 @@ const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
     ProtectedDashboardRepositoryIndexRoute,
   ProtectedDashboardReviewsIndexRoute: ProtectedDashboardReviewsIndexRoute,
   ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
+  ProtectedDashboardSubscriptionsIndexRoute:
+    ProtectedDashboardSubscriptionsIndexRoute,
 }
 
 const ProtectedDashboardRouteWithChildren =
