@@ -14,3 +14,4 @@ todos.json
 
 /generated/prisma
 src/routeTrees.gen.ts
+*.dev

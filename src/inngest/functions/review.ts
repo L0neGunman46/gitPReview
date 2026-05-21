@@ -9,7 +9,7 @@ export const generateReview = inngest.createFunction(
   {
     id: 'generate-review',
     concurrency: 5,
-    triggers: { event: 'pr.review.requested' },
+    triggers: [{ event: 'pr.review.requested' }],
   },
   async ({ event, step }) => {
     const { owner, repo, prNumber, userId } = event.data

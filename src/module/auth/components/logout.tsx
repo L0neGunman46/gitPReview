@@ -1,6 +1,6 @@
 import React from 'react'
 import { signOut } from '#/lib/auth-client'
-import { redirect, useRouter, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 
 const Logout = ({
   children,

@@ -7,7 +7,10 @@ import { generateReview } from '#/inngest/functions/review'
 const handler = serve({
   client: inngest,
   functions: [IndexRepo, generateReview],
+  
 })
+
+// export const maxDuration = 300;
 
 export const Route = createFileRoute('/api/inngest')({
   server: {
