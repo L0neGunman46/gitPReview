@@ -8,7 +8,7 @@ export const Route = createFileRoute('/api/webhooks/github/$')({
         try {
           const body = await request.json()
           const event = request.headers.get('x-github-event')
-          console.log('Recieved Github event: ${event}')
+          console.log(`Recieved Github event: ${event}`)
           if (event === 'ping') {
             return new Response(JSON.stringify({ message: 'Pong' }), {
               status: 200,

@@ -14,7 +14,7 @@ const polarClient = new Polar({
   // Use 'sandbox' if you're using the Polar Sandbox environment
   // Remember that access tokens, products, etc. are completely separated between environments.
   // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
-  server: 'sandbox',
+  server: (process.env.POLAR_ENV as 'sandbox' | 'production') || 'sandbox',
 })
 
 export const auth = betterAuth({
@@ -29,14 +29,12 @@ export const auth = betterAuth({
         checkout({
           products: [
             {
-              productId:
-                process.env.POLAR_PRODUCT_ID ||
-                '8354532e-64bb-48f0-b90b-ec77c202cb39', // ID of Product from Polar Dashboard
+              productId: process.env.POLAR_PRODUCT_ID!,
               slug: 'gitpreview', // Custom slug for easy reference in Checkout URL, e.g. /checkout/pro
             },
           ],
           successUrl:
-            process.env.POLAR_SUCCESS_URL ||
+            process.env.NEXT_PUBLIC_APP_BASE_URL +
             '/dashboard/subscription?success=true',
           authenticatedUsersOnly: true,
         }),
@@ -116,7 +114,7 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [
+    process.env.NEXT_PUBLIC_APP_BASE_URL!,
     'http://localhost:3000',
-    'https://autonomous-pachydermic-rod.ngrok-free.dev',
   ], // webhook endpoint and also a main end point
 })

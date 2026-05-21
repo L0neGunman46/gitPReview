@@ -51,7 +51,7 @@ export const reviewPullRequest = createServerFn()
 
       const { title } = await getPullRequestDiff(token, owner, repoName, prNum)
 
-      console.log(title)
+      console.log({title})
 
       await inngest.send({
         name: 'pr.review.requested',
@@ -64,7 +64,7 @@ export const reviewPullRequest = createServerFn()
       })
 
       await incrementReviewCount({
-        data: { repositoryId: repository.id, userId: repository.id },
+        data: { repositoryId: repository.id, userId: repository.user.id },
       })
 
       return { success: true, message: 'Review Queued' }
