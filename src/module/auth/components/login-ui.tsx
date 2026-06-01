@@ -25,11 +25,11 @@ const LoginUI = () => {
     }
   }
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fafafa] p-4 font-sans">
-      <Card className="w-full max-w-[500px]  border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4 font-sans">
+      <Card className="w-full max-w-[500px] border-border shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden">
         {/* Header - Overriding default shadcn padding with pt-8 px-8 */}
         <CardHeader className="px-8 pt-8 pb-6 space-y-3 text-center">
-          <CardTitle className="text-[30px] font-semibold tracking-tight text-gray-900">
+          <CardTitle className="text-[30px] font-semibold tracking-tight text-foreground">
             SignIn to GitPReview
           </CardTitle>
           <CardDescription className="text-[20px]">
@@ -41,7 +41,7 @@ const LoginUI = () => {
         <CardContent className="px-8 pb-6 space-y-5">
           {/* Error Message Display */}
           {/* {error && (
-            <div className="p-3 text-[20px] text-red-600 bg-red-50 rounded-md border border-red-100 text-center font-medium">
+            <div className="p-3 text-[20px] text-destructive bg-destructive/10 rounded-md border border-destructive/20 text-center font-medium">
               {error}
             </div>
           )} */}
@@ -53,11 +53,11 @@ const LoginUI = () => {
               variant="outline"
               onClick={handleGitHubLogin}
               disabled={isLoading}
-              className="w-full h-14 border-gray-200 text-gray-600 font-medium transition-colors"
+              className="w-full h-14 border-border text-muted-foreground font-medium transition-colors"
             >
               {isLoading ? (
                 <svg
-                  className="animate-spin mr-2 h-4 w-4 text-gray-600"
+                  className="animate-spin mr-2 h-4 w-4 text-muted-foreground"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -92,11 +92,11 @@ const LoginUI = () => {
 
         {/* Card Bottom Links */}
         <div className="text-center pb-5">
-          <p className="text-[16px] text-gray-500">
+          <p className="text-[16px] text-muted-foreground">
             Don't have an account?{' '}
             <a
               href="#"
-              className="font-medium text-[#6C47FF] hover:text-[#5839db] hover:underline"
+              className="font-medium text-primary hover:text-primary/80 hover:underline"
             >
               Sign up
             </a>

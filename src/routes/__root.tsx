@@ -10,7 +10,7 @@ import { Toaster } from '#/components/ui/sonner'
 
 const queryClient = new QueryClient()
 
-const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'light';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+const THEME_INIT_SCRIPT = `(function(){try{var root=document.documentElement;var cls=root.className;var hasLight=cls.indexOf('light')>-1;var hasDark=cls.indexOf('dark')>-1;var hasSystem=cls.indexOf('system')>-1;if(!hasLight&&!hasDark||hasSystem){var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=prefersDark?'dark':'light';root.classList.remove('light','dark','system');root.classList.add(resolved);root.style.colorScheme=resolved;}else{root.style.colorScheme=hasDark?'dark':'light';}}catch(e){}})();`
 
 export const Route = createRootRoute({
   head: () => ({
