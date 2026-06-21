@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ProtectedRouteImport } from './routes/_protected'
-import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
@@ -22,14 +24,24 @@ import { Route as ProtectedDashboardReviewsIndexRouteImport } from './routes/_pr
 import { Route as ProtectedDashboardRepositoryIndexRouteImport } from './routes/_protected/dashboard/repository/index'
 import { Route as ApiWebhooksGithubSplatRouteImport } from './routes/api/webhooks/github/$'
 
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
@@ -87,7 +99,9 @@ const ApiWebhooksGithubSplatRoute = ApiWebhooksGithubSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof ProtectedIndexRoute
+  '/': typeof IndexRoute
+  '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
@@ -100,9 +114,11 @@ export interface FileRoutesByFullPath {
   '/dashboard/subscriptions/': typeof ProtectedDashboardSubscriptionsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
-  '/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
@@ -113,11 +129,13 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
+  '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/_protected/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/api/inngest': typeof ApiInngestRoute
   '/auth/login': typeof AuthLoginRoute
-  '/_protected/': typeof ProtectedIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/api/webhooks/github/$': typeof ApiWebhooksGithubSplatRoute
@@ -130,6 +148,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/features'
+    | '/how-it-works'
     | '/dashboard'
     | '/api/inngest'
     | '/auth/login'
@@ -142,9 +162,11 @@ export interface FileRouteTypes {
     | '/dashboard/subscriptions/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/features'
+    | '/how-it-works'
     | '/api/inngest'
     | '/auth/login'
-    | '/'
     | '/api/auth/$'
     | '/dashboard'
     | '/api/webhooks/github/$'
@@ -154,11 +176,13 @@ export interface FileRouteTypes {
     | '/dashboard/subscriptions'
   id:
     | '__root__'
+    | '/'
     | '/_protected'
+    | '/features'
+    | '/how-it-works'
     | '/_protected/dashboard'
     | '/api/inngest'
     | '/auth/login'
-    | '/_protected/'
     | '/api/auth/$'
     | '/_protected/dashboard/'
     | '/api/webhooks/github/$'
@@ -169,7 +193,10 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
+  FeaturesRoute: typeof FeaturesRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   ApiInngestRoute: typeof ApiInngestRoute
   AuthLoginRoute: typeof AuthLoginRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -178,6 +205,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protected': {
       id: '/_protected'
       path: ''
@@ -185,12 +226,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/': {
-      id: '/_protected/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof ProtectedIndexRouteImport
-      parentRoute: typeof ProtectedRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
       id: '/auth/login'
@@ -288,12 +329,10 @@ const ProtectedDashboardRouteWithChildren =
 
 interface ProtectedRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
-  ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
-  ProtectedIndexRoute: ProtectedIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -301,7 +340,10 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
+  FeaturesRoute: FeaturesRoute,
+  HowItWorksRoute: HowItWorksRoute,
   ApiInngestRoute: ApiInngestRoute,
   AuthLoginRoute: AuthLoginRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
